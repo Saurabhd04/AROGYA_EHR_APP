@@ -27,17 +27,44 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# AUTH_USER_MODEL = 'customUser.Register'
 
 # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'django.contrib.sites',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'api',
+    # 'rest_auth',
+    # 'customUser',
+    # 'rest_auth.registration',
+    'rest_framework',
+    'appV1',
+    # 'rest_framework.authtoken',
+    # 'allauth',
+    # 'allauth.account',
 ]
+
+SITE_ID = 1
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.authentication.TokenAuthentication',
+#     ]
+# }
+
+# REST_AUTH_REGISTER_SERIALIZERS = {
+#     'REGISTER_SERIALIZER': 'customUser.serializers.CustomRegisterSerializer',
+# }
+
+# ACCOUNT_ADAPTER = 'customUser.adapter.CustomAccountAdapter'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,8 +102,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'API\'s',
+        'USER' : 'postgres',
+        'PASSWORD' : '7838',
+        'HOST' : 'localhost'
     }
 }
 
