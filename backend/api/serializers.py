@@ -16,3 +16,7 @@ class PersonalInfoSerializer(serializers.ModelSerializer):
         model = models.PersonalInfo
         fields = '__all__'
 
+class EmergencyInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EmergencyInfo
+        fields = '__all__'

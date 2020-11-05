@@ -25,3 +25,20 @@ class PersonalInfoList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class EmergencyInfoList(APIView):
+    serializer_class = serializers.EmergencyInfoSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    def get(self, request):
+        queryset = models.EmergencyInfo.objects.all()
+        serializer = serializers.EmergencyInfoSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = serializers.EmergencyInfoSerializer(data = request.data)         
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
