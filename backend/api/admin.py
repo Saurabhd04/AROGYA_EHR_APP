@@ -4,3 +4,4 @@ from django.contrib import admin
 from appV1 import models
 
 admin.site.register(models.PersonalInfo)
+admin.site.register(models.EmergencyInfo)
