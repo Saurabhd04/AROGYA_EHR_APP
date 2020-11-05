@@ -1,0 +1,5 @@
+#ERROR: rest-auth/registration returns connection refused WINERROR!!
+This error has popped when i created a custom registration form using rest-auth.registration
+RESOLVED!
+https://github.com/Tivix/django-rest-auth/issues/407 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
