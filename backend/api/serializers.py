@@ -20,3 +20,8 @@ class EmergencyInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.EmergencyInfo
         fields = '__all__'
+
+class InsuranceInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.InsuranceInfo
+        fields = '__all__'

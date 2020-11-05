@@ -42,3 +42,20 @@ class EmergencyInfoList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class InsuranceInfoList(APIView):
+    serializer_class = serializers.InsuranceInfoSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    def get(self, request):
+        queryset = models.InsuranceInfo.objects.all()
+        serializer = serializers.InsuranceInfoSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = serializers.InsuranceInfoSerializer(data = request.data)         
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

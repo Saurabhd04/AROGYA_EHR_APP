@@ -7,7 +7,23 @@ class PersonalInfo(models.Model):
     lastName = models.CharField(max_length=100, null=True)
     gender = models.CharField(max_length = 10)
     dateOfBirth = models.DateField(max_length=10)
-    bloodGroup = models.CharField(max_length=3)
+
+    BLOOD_GROUP_CHOICES = [
+        ('A+', 'A+'),
+        ('A-', 'A-'),
+        ('AB+', 'AB+'),
+        ('B+', 'B+'),
+        ('B-', 'B-'),
+        ('AB-', 'AB-'),
+        ('O-', 'O-'),
+        ('O+', 'O+'),
+    ]
+    bloodGroup = models.CharField(
+        max_length=3,
+        choices=BLOOD_GROUP_CHOICES,
+        null=True
+    )
+
     emailId = models.EmailField(max_length=50, unique=True)
     mobileNumber = models.CharField(max_length=10)
     alternateMobileNumber = models.CharField(max_length=10, null = True)
@@ -26,10 +42,10 @@ class EmergencyInfo(models.Model):
     relativeAddress = models.CharField(max_length=100)
     userId = models.ForeignKey(PersonalInfo, on_delete=models.CASCADE)
 
-# class InsuranceInfo(models.Model):
-#     insuranceProvider = models.CharField(max_length=50)
-#     policyNumber = models.CharField(max_length=20)
-#     policyName = models.CharField(max_length=50)
-#     validTill = models.DateField()
-    
+class InsuranceInfo(models.Model):
+    insuranceProvider = models.CharField(max_length=50)
+    policyNumber = models.CharField(max_length=20, unique=True)
+    policyName = models.CharField(max_length=50)
+    validTill = models.DateField()
+    userId = models.ForeignKey(PersonalInfo, on_delete=models.CASCADE)
 
