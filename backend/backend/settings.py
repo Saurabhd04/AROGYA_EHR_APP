@@ -39,21 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
-    'rest_framework',
-    'rest_framework.authtoken',
-    'personal_info.apps.PersonalInfoConfig',
-]
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-}
-=======
     'api',
     # 'rest_auth',
     # 'customUser',
@@ -80,7 +65,6 @@ SITE_ID = 1
 # ACCOUNT_ADAPTER = 'customUser.adapter.CustomAccountAdapter'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
->>>>>>> bf745c8807e448c3317caa5ab00d4c7469cecfd0
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -119,12 +103,22 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'API\'s',
+        'NAME': 'APIS',
         'USER' : 'postgres',
-        'PASSWORD' : '7838',
+        'PASSWORD' : 'admin',
         'HOST' : 'localhost'
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'API\'s',
+#         'USER' : 'postgres',
+#         'PASSWORD' : '7838',
+#         'HOST' : 'localhost'
+#     }
+# }
 
 
 # Password validation
