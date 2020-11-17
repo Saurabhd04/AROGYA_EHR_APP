@@ -25,3 +25,19 @@ class InsuranceInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.InsuranceInfo
         fields = '__all__'
+
+class PrescriptionInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PrescriptionInfo
+        fields = '__all__'
+
+class OrganizationInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.OrganizationInfo
+        fields = '__all__'
+
+class MedicalPractitionerInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.MedicalPractitionerInfo
+        fields = '__all__'
+
