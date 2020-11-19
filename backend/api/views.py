@@ -44,6 +44,18 @@ class EmergencyInfoList(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class EmergencyInfoOfSpecificUser(APIView):
+    def get_object(self, fk):
+        try:
+            return models.EmergencyInfo.objects.filter(userId = fk)
+        except models.PrescriptionInfo.DoesNotExist:
+            raise Http404
+
+    def get(self, request, fk, format=None):
+        queryset = self.get_object(fk)
+        serializer = serializers.EmergencyInfoSerializer(queryset, many=True)
+        return Response(serializer.data)            
+
 class InsuranceInfoList(APIView):
     serializer_class = serializers.InsuranceInfoSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
@@ -61,6 +73,18 @@ class InsuranceInfoList(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class InsuranceInfoOfSpecificUser(APIView):
+    def get_object(self, fk):
+        try:
+            return models.InsuranceInfo.objects.filter(userId = fk)
+        except models.InsuranceInfo.DoesNotExist:
+            raise Http404
+
+    def get(self, request, fk, format=None):
+        queryset = self.get_object(fk)
+        serializer = serializers.InsuranceInfoSerializer(queryset, many=True)
+        return Response(serializer.data)  
+
 class PrescriptionInfoList(APIView):
     serializer_class = serializers.PrescriptionInfoSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
@@ -73,11 +97,28 @@ class PrescriptionInfoList(APIView):
         serializer = serializers.PrescriptionInfoSerializer(data = request.data)         
         
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            #Checking whether the prescriber is a valid Prescriber
+            pid = serializer.validated_data.get("prescriberId")
+            ln = models.MedicalPractitionerInfo.objects.get(id = pid.__dict__['id']).__dict__["licenseNumber"]
+            if(ln[0:1] == 'D'):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response("You dont have the right to prescribe medicines.")    
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
+class PrescriptionInfoOfSpecificUser(APIView):
+    def get_object(self, fk):
+        try:
+            return models.PrescriptionInfo.objects.filter(userId = fk, )
+        except models.PrescriptionInfo.DoesNotExist:
+            raise Http404
+
+    def get(self, request, fk, format=None):
+        userPrescriptions = self.get_object(fk)
+        serializer = serializers.PrescriptionInfoSerializer(userPrescriptions, many=True)
+        return Response(serializer.data)    
 
 class OrganizationInfoList(APIView):
     serializer_class = serializers.OrganizationInfoSerializer
@@ -135,3 +176,45 @@ class MedicalPractitionerInfoList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                        
+
+class MedicalPractitionerInfoOfSpecificOrganization(APIView):
+    def get_object(self, fk):
+        try:
+            return models.MedicalPractitionerInfo.objects.filter(orgId = fk, )
+        except models.MedicalPractitionerInfo.DoesNotExist:
+            raise Http404
+
+    def get(self, request, fk, format=None):
+        medicalPractitioner = self.get_object(fk)
+        serializer = serializers.MedicalPractitionerInfoSerializer(medicalPractitioner, many=True)
+        return Response(serializer.data)                
+
+
+class BloodPressureList(APIView):
+    serializer_class = serializers.BloodPressureSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    def get(self, request):
+        queryset = models.BloodPressure.objects.all()
+        serializer = serializers.BloodPressureSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = serializers.BloodPressureSerializer(data = request.data)         
+    
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                        
+
+class BloodPressureOfSpecificUser(APIView):
+    def get_object(self, fk):
+        try:
+            return models.BloodPressure.objects.filter(userId = fk, )
+        except models.BloodPressure.DoesNotExist:
+            raise Http404
+
+    def get(self, request, fk, format=None):
+        queryset = self.get_object(fk)
+        serializer = serializers.BloodPressureSerializer(queryset, many=True)
+        return Response(serializer.data)           

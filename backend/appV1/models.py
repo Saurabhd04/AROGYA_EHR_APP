@@ -92,11 +92,13 @@ class PrescriptionInfo(models.Model):
     prescriptionDate = models.DateField(default= datetime.date.today)  
     contactNumber = models.CharField(max_length=10, null=True) # fetched from MP table
     address = models.CharField(max_length=50, null=True) # fetched from MP table
+    symptoms = models.TextField(max_length=255, null=True)
     medicines = models.TextField(max_length=255, null=True) #put this field comma seperated
     notes = models.CharField(max_length=255, null=True)
     prescriptionAttachment = models.ImageField(null = True)
     userId = models.ForeignKey(PersonalInfo, on_delete=models.CASCADE)
     
+    #Automatically filling fields when prescriber id is provided.
     def save(self, *args, **kwargs):
         if not self.id and self.prescriberId is not None:
             MP = MedicalPractitionerInfo.objects.get(id = self.prescriberId.__dict__['id'])
@@ -107,3 +109,11 @@ class PrescriptionInfo(models.Model):
             self.doctorName = self.prescriberId.__dict__['name']
             self.contactNumber = self.prescriberId.__dict__['mobileNumber']
         super(PrescriptionInfo, self).save()
+
+
+class BloodPressure(models.Model):
+    systolic = models.IntegerField()
+    diastolic = models.IntegerField()
+    date = models.DateField(default = datetime.date.today)
+    notes = models.CharField(max_length=255, null = True)
+    userId = models.ForeignKey(PersonalInfo, on_delete = models.CASCADE)

@@ -41,3 +41,8 @@ class MedicalPractitionerInfoSerializer(serializers.ModelSerializer):
         model = models.MedicalPractitionerInfo
         fields = '__all__'
 
+class BloodPressureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.BloodPressure
+        fields = '__all__'        
+
