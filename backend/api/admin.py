@@ -9,3 +9,7 @@ admin.site.register(models.InsuranceInfo)
 admin.site.register(models.PrescriptionInfo)
 admin.site.register(models.OrganizationInfo)
 admin.site.register(models.MedicalPractitionerInfo)
+admin.site.register(models.BloodPressure)
+admin.site.register(models.BodyTemperature)
+admin.site.register(models.HeartRate)
+

@@ -46,3 +46,13 @@ class BloodPressureSerializer(serializers.ModelSerializer):
         model = models.BloodPressure
         fields = '__all__'        
 
+class BodyTemperatureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.BodyTemperature
+        fields = '__all__'  
+
+class HeartRateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.HeartRate
+        fields = '__all__'
+    

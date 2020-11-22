@@ -205,7 +205,24 @@ class BloodPressureList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                        
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)      
+
+class BloodPressureDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return models.BloodPressure.objects.get(id = pk)
+        except models.BloodPressure.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        queryset = self.get_object(pk)
+        serializer = serializers.BloodPressureSerializer(queryset)
+        return Response(serializer.data)          
+
+    def delete(self, request, pk, format=None):
+        queryset = self.get_object(pk)
+        queryset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)                  
 
 class BloodPressureOfSpecificUser(APIView):
     def get_object(self, fk):
@@ -218,3 +235,96 @@ class BloodPressureOfSpecificUser(APIView):
         queryset = self.get_object(fk)
         serializer = serializers.BloodPressureSerializer(queryset, many=True)
         return Response(serializer.data)           
+
+class BodyTemperatureList(APIView):
+    serializer_class = serializers.BodyTemperatureSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    def get(self, request):
+        queryset = models.BodyTemperature.objects.all()
+        serializer = serializers.BodyTemperatureSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = serializers.BodyTemperatureSerializer(data = request.data)         
+    
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)          
+
+class BodyTemperatureDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return models.BodyTemperature.objects.get(id = pk)
+        except models.BodyTemperature.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        queryset = self.get_object(pk)
+        serializer = serializers.BodyTemperatureSerializer(queryset)
+        return Response(serializer.data)          
+
+    def delete(self, request, pk, format=None):
+        queryset = self.get_object(pk)
+        queryset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class BodyTemperatureOfSpecificUser(APIView):
+    def get_object(self, fk):
+        try:
+            return models.BodyTemperature.objects.filter(userId = fk, )
+        except models.BodyTemperature.DoesNotExist:
+            raise Http404
+
+    def get(self, request, fk, format=None):
+        queryset = self.get_object(fk)
+        serializer = serializers.BodyTemperatureSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class HeartRateList(APIView):
+    serializer_class = serializers.HeartRateSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    def get(self, request):
+        queryset = models.HeartRate.objects.all()
+        serializer = serializers.HeartRateSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = serializers.HeartRateSerializer(data = request.data)         
+    
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)          
+
+class HeartRateDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return models.HeartRate.objects.get(id = pk)
+        except models.HeartRate.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        queryset = self.get_object(pk)
+        serializer = serializers.HeartRateSerializer(queryset)
+        return Response(serializer.data)          
+
+    def delete(self, request, pk, format=None):
+        queryset = self.get_object(pk)
+        queryset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class HeartRateOfSpecificUser(APIView):
+    def get_object(self, fk):
+        try:
+            return models.HeartRate.objects.filter(userId = fk, )
+        except models.HeartRate.DoesNotExist:
+            raise Http404
+
+    def get(self, request, fk, format=None):
+        queryset = self.get_object(fk)
+        serializer = serializers.HeartRateSerializer(queryset, many=True)
+        return Response(serializer.data)          
