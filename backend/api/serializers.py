@@ -55,4 +55,8 @@ class HeartRateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.HeartRate
         fields = '__all__'
-    
+
+class RespiratoryRateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.RespiratoryRate
+        fields = '__all__'    

@@ -12,4 +12,5 @@ admin.site.register(models.MedicalPractitionerInfo)
 admin.site.register(models.BloodPressure)
 admin.site.register(models.BodyTemperature)
 admin.site.register(models.HeartRate)
+admin.site.register(models.RespiratoryRate)
 

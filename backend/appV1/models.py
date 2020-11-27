@@ -131,3 +131,8 @@ class HeartRate(models.Model):
     notes = models.CharField(max_length=255, null = True)
     userId = models.ForeignKey(PersonalInfo, on_delete = models.CASCADE)
 
+class RespiratoryRate(models.Model):
+    rate = models.IntegerField()
+    date = models.DateField(default = datetime.date.today)
+    notes = models.CharField(max_length = 255, null = True)
+    userId = models.ForeignKey(PersonalInfo, on_delete = models.CASCADE)

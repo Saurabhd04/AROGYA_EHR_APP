@@ -24,6 +24,10 @@ urlpatterns = [
     path('HeartRate/', views.HeartRateList.as_view()),
     path('HeartRate/<int:pk>', views.HeartRateDetail.as_view()),
     path('HeartRateOfSpecificUser/<int:fk>/', views.HeartRateOfSpecificUser.as_view()),
+    path('RespiratoryRate/', views.RespiratoryRateList.as_view()),
+    path('RespiratoryRate/<int:pk>', views.RespiratoryRateDetail.as_view()),
+    path('RespiratoryRateOfSpecificUser/<int:fk>/', views.RespiratoryRateOfSpecificUser.as_view()),
+
 
     # path('PerInfo/', include('PersonalInfo.urls')),
     # path('Register/', include('rest_auth.registration.urls')),

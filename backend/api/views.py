@@ -327,4 +327,52 @@ class HeartRateOfSpecificUser(APIView):
     def get(self, request, fk, format=None):
         queryset = self.get_object(fk)
         serializer = serializers.HeartRateSerializer(queryset, many=True)
+        return Response(serializer.data)  
+
+##############################################################
+
+class RespiratoryRateList(APIView):
+    serializer_class = serializers.RespiratoryRateSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    def get(self, request):
+        queryset = models.RespiratoryRate.objects.all()
+        serializer = serializers.RespiratoryRateSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = serializers.RespiratoryRateSerializer(data = request.data)         
+    
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)          
+
+class RespiratoryRateDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return models.RespiratoryRate.objects.get(id = pk)
+        except models.RespiratoryRate.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        queryset = self.get_object(pk)
+        serializer = serializers.RespiratoryRateSerializer(queryset)
+        return Response(serializer.data)          
+
+    def delete(self, request, pk, format=None):
+        queryset = self.get_object(pk)
+        queryset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class RespiratoryRateOfSpecificUser(APIView):
+    def get_object(self, fk):
+        try:
+            return models.RespiratoryRate.objects.filter(userId = fk, )
+        except models.RespiratoryRate.DoesNotExist:
+            raise Http404
+
+    def get(self, request, fk, format=None):
+        queryset = self.get_object(fk)
+        serializer = serializers.RespiratoryRateSerializer(queryset, many=True)
         return Response(serializer.data)          
