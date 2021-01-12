@@ -5,9 +5,11 @@ from . import views
 urlpatterns = [
     # path('rest-auth/', include('rest_auth.urls')),
     path('PersonalInfo/', views.PersonalInfoList.as_view()),
+    path('PersonalInfoOfSpecificUser/<int:pk>', views.PersonalInfoOfSpecificUser.as_view()), 
     path('EmergencyInfo/', views.EmergencyInfoList.as_view()),
     path('EmergencyInfoOfSpecificUser/<int:fk>', views.EmergencyInfoOfSpecificUser.as_view()),
     path('InsuranceInfo/', views.InsuranceInfoList.as_view()),
+    path('InsuranceInfo/<int:pk>', views.InsuranceInfoDetail.as_view()), #Delete url
     path('InsuranceInfoOfSpecificUser/<int:fk>', views.InsuranceInfoOfSpecificUser.as_view()),
     path('PrescriptionInfo/', views.PrescriptionInfoList.as_view()),
     path('PrescriptionInfoOfSpecificUser/<int:fk>/', views.PrescriptionInfoOfSpecificUser.as_view()),
@@ -28,8 +30,6 @@ urlpatterns = [
     path('RespiratoryRate/<int:pk>', views.RespiratoryRateDetail.as_view()),
     path('RespiratoryRateOfSpecificUser/<int:fk>/', views.RespiratoryRateOfSpecificUser.as_view()),
 
-
-    # path('PerInfo/', include('PersonalInfo.urls')),
     # path('Register/', include('rest_auth.registration.urls')),
   
 ]

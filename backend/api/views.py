@@ -27,6 +27,21 @@ class PersonalInfoList(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class PersonalInfoOfSpecificUser(APIView):
+    serializer_class = serializers.PersonalInfoSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    def get_object(self, pk):
+        try:
+            return models.PersonalInfo.objects.get(pk = pk)
+        except models.PersonalInfo.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        queryset = self.get_object(pk)
+        serializer = serializers.PersonalInfoSerializer(queryset, many=False)
+        return Response(serializer.data)            
+
+
 class EmergencyInfoList(APIView):
     serializer_class = serializers.EmergencyInfoSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
@@ -71,7 +86,29 @@ class InsuranceInfoList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
+
+class InsuranceInfoDetail(APIView):
+    serializer_class = serializers.InsuranceInfoSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+
+    def get_object(self, pk):
+        try:
+            return models.InsuranceInfo.objects.get(pk=pk)
+        except models.InsuranceInfo.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        queryset = self.get_object(pk = pk)
+        serializer = serializers.InsuranceInfoSerializer(queryset, many=False)
+        return Response(serializer.data)
+
+    def delete(self, request, pk, format=None):
+        queryset = self.get_object(pk = pk)
+        #serializer = serializers.InsuranceInfoSerializer(queryset, many=False)
+        queryset.delete() 
+        return Response("Delete Successful!");    
+ 
 
 class InsuranceInfoOfSpecificUser(APIView):
     def get_object(self, fk):
@@ -83,7 +120,9 @@ class InsuranceInfoOfSpecificUser(APIView):
     def get(self, request, fk, format=None):
         queryset = self.get_object(fk)
         serializer = serializers.InsuranceInfoSerializer(queryset, many=True)
-        return Response(serializer.data)  
+        return Response(serializer.data) 
+
+           
 
 class PrescriptionInfoList(APIView):
     serializer_class = serializers.PrescriptionInfoSerializer
