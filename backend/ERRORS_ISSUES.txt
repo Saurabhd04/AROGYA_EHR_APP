@@ -21,3 +21,42 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 }
 
 Date format must be YYYY-MM-DD
+
+Registration POST url:
+-----------------------------------------------
+POST:  http://127.0.0.1:8000/api/auth/register
+
+Headers: { Content-Type : application/json}
+
+Body: {
+    "username":"Dr1",
+    "email":"dr1@dr.com",
+    "password":"123456",
+    "is_MP":true
+}
+
+
+Login POST url:
+--------------------------------------
+POST:  http://127.0.0.1:8000/api/auth/login
+
+Headers: { Content-Type : application/json}
+
+Body: {
+    "username":"Dr1",
+    "password":"123456",
+}
+
+
+User Detail Fetch:
+-----------------------------------------
+GET:  http://127.0.0.1:8000/api/auth/user
+
+Headers: {Authorization: Token 3335338bc97d0a279d60f50309759558cd98ec6d8b171906ef5f7d2e6897b479}
+
+
+Logout of User:
+-----------------------------------------
+POST:  http://127.0.0.1:8000/api/auth/logout
+
+Headers: {Authorization: Token 3335338bc97d0a279d60f50309759558cd98ec6d8b171906ef5f7d2e6897b479}

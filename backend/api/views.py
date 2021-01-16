@@ -5,11 +5,12 @@ from . import serializers
 # from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 #from django.http import HttpResponse
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.renderers import HTMLFormRenderer, JSONRenderer, BrowsableAPIRenderer
 from django.http import Http404
 
 # Create your views here.
+
 class PersonalInfoList(APIView):
     serializer_class = serializers.PersonalInfoSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
@@ -73,90 +74,89 @@ class EmergencyInfoOfSpecificUser(APIView):
 
 class InsuranceInfoList(APIView):
     serializer_class = serializers.InsuranceInfoSerializer
-    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+
     def get(self, request):
-        queryset = models.InsuranceInfo.objects.all()
+        queryset = models.InsuranceInfo.objects.filter(userId = request.user)
         serializer = serializers.InsuranceInfoSerializer(queryset, many=True)
+        print(request.user)
         return Response(serializer.data)
 
     def post(self, request, format=None):
         serializer = serializers.InsuranceInfoSerializer(data = request.data)         
         
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(userId = request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
 
-class InsuranceInfoDetail(APIView):
-    serializer_class = serializers.InsuranceInfoSerializer
-    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
-
-    def get_object(self, pk):
+    def get_object(self, pk, user):
         try:
-            return models.InsuranceInfo.objects.get(pk=pk)
+            return models.InsuranceInfo.objects.filter(userId = user).get(pk=pk)
         except models.InsuranceInfo.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk):
-        queryset = self.get_object(pk = pk)
-        serializer = serializers.InsuranceInfoSerializer(queryset, many=False)
-        return Response(serializer.data)
+            raise Http404        
 
     def delete(self, request, pk, format=None):
-        queryset = self.get_object(pk = pk)
+        queryset = self.get_object(pk = pk, user=request.user)
         #serializer = serializers.InsuranceInfoSerializer(queryset, many=False)
+        temp = queryset
         queryset.delete() 
-        return Response("Delete Successful!");    
- 
-
-class InsuranceInfoOfSpecificUser(APIView):
-    def get_object(self, fk):
-        try:
-            return models.InsuranceInfo.objects.filter(userId = fk)
-        except models.InsuranceInfo.DoesNotExist:
-            raise Http404
-
-    def get(self, request, fk, format=None):
-        queryset = self.get_object(fk)
-        serializer = serializers.InsuranceInfoSerializer(queryset, many=True)
-        return Response(serializer.data) 
-
-           
+        return Response("Delete Successful!" + str(temp));      
 
 class PrescriptionInfoList(APIView):
-    serializer_class = serializers.PrescriptionInfoSerializer
+    #serializer_class = [ serializers.PrescriptionInfoPostSerializer, serializers.PrescriptionInfoGetSerializer ]
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    permissions_classes = [
+        permissions.IsAuthenticated
+    ]
+
+
+    #This GET request is for doctors
     def get(self, request):
-        queryset = models.PrescriptionInfo.objects.all()
-        serializer = serializers.PrescriptionInfoSerializer(queryset, many=True)
+        #queryset = models.PrescriptionInfo.objects.all()
+        queryset = models.PrescriptionInfo.objects.filter(prescriberId = request.user)
+        serializer = serializers.PrescriptionInfoGetSerializer(queryset, many=True)    #Serializer for Get
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = serializers.PrescriptionInfoSerializer(data = request.data)         
+        serializer = serializers.PrescriptionInfoPostSerializer(data = request.data)       #Serializer for Post    
         
         if serializer.is_valid():
             #Checking whether the prescriber is a valid Prescriber
             pid = serializer.validated_data.get("prescriberId")
-            ln = models.MedicalPractitionerInfo.objects.get(id = pid.__dict__['id']).__dict__["licenseNumber"]
+            #print(pid.__dict__['id'])
+            ln = models.MedicalPractitionerInfo.objects.get(user = pid.__dict__['id']).__dict__["licenseNumber"]
+            #print(ln)
             if(ln[0:1] == 'D'):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response("You dont have the right to prescribe medicines.")    
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
 class PrescriptionInfoOfSpecificUser(APIView):
+    permissions_classes = [
+        permissions.IsAuthenticated
+    ]
+
+    serializer_classes = serializers.PrescriptionInfoGetSerializer
+
     def get_object(self, fk):
         try:
-            return models.PrescriptionInfo.objects.filter(userId = fk, )
+            return models.PrescriptionInfo.objects.filter(userId = fk)
         except models.PrescriptionInfo.DoesNotExist:
             raise Http404
 
-    def get(self, request, fk, format=None):
-        userPrescriptions = self.get_object(fk)
-        serializer = serializers.PrescriptionInfoSerializer(userPrescriptions, many=True)
+    def get(self, request, format=None):
+        userPrescriptions = self.get_object(request.user)
+        serializer = serializers.PrescriptionInfoGetSerializer(userPrescriptions, many=True)
         return Response(serializer.data)    
 
 class OrganizationInfoList(APIView):
@@ -202,6 +202,10 @@ class OrganizationInfoDetail(APIView):
 class MedicalPractitionerInfoList(APIView):
     serializer_class = serializers.MedicalPractitionerInfoSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    permissions_classes = [
+        permissions.IsAuthenticated
+    ]
+
     def get(self, request):
         queryset = models.MedicalPractitionerInfo.objects.all()
         serializer = serializers.MedicalPractitionerInfoSerializer(queryset, many=True)
@@ -211,10 +215,22 @@ class MedicalPractitionerInfoList(APIView):
         serializer = serializers.MedicalPractitionerInfoSerializer(data = request.data)         
         
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)                        
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
+
+    def get_object(self, pk, user):
+        try:
+            return models.MedicalPractitionerInfo.objects.filter(user = user).get(pk=pk)
+        except models.MedicalPractitionerInfo.DoesNotExist:
+            raise Http404    
+
+    def delete(self, request, pk, format=None):
+        queryset = self.get_object(pk = pk, user=request.user)
+        #serializer = serializers.InsuranceInfoSerializer(queryset, many=False)
+        queryset.delete() 
+        return Response("Delete Successful!");                                 
 
 class MedicalPractitionerInfoOfSpecificOrganization(APIView):
     def get_object(self, fk):

@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.5', '127.0.0.1']
 
-# AUTH_USER_MODEL = 'customUser.Register'
+AUTH_USER_MODEL = "account.User"
 
 # Application definition
 
@@ -40,24 +40,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
-    # 'rest_auth',
-    # 'customUser',
-    # 'rest_auth.registration',
+
     'rest_framework',
     'appV1',
-    # 'rest_framework.authtoken',
-    # 'allauth',
-    # 'allauth.account',
+   
     'corsheaders',
+    'account',
+    'knox'
+    
 ]
 
 SITE_ID = 1
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.authentication.TokenAuthentication',
-#     ]
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+}
 
 # REST_AUTH_REGISTER_SERIALIZERS = {
 #     'REGISTER_SERIALIZER': 'customUser.serializers.CustomRegisterSerializer',
@@ -101,6 +98,14 @@ TEMPLATES = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
@@ -116,16 +121,6 @@ DATABASES = {
         'HOST' : 'localhost'
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'API\'s',
-#         'USER' : 'postgres',
-#         'PASSWORD' : '7838',
-#         'HOST' : 'localhost'
-#     }
-# }
 
 
 # Password validation

@@ -24,12 +24,17 @@ class EmergencyInfoSerializer(serializers.ModelSerializer):
 class InsuranceInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.InsuranceInfo
-        fields = '__all__'
+        fields = ("id", "insuranceProvider","policyNumber","policyName","validTill")
 
-class PrescriptionInfoSerializer(serializers.ModelSerializer):
+class PrescriptionInfoPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PrescriptionInfo
-        fields = '__all__'
+        fields = ('prescriberId','prescriptionDate','symptoms','medicines','notes','userId')
+
+class PrescriptionInfoGetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PrescriptionInfo
+        fields = '__all__'        
 
 class OrganizationInfoSerializer(serializers.ModelSerializer):
     class Meta:
